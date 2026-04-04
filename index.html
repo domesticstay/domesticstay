@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>êµ­ë´ìë° ìì ëª¨ëí°ë§</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic',-apple-system,sans-serif;background:#f0f2f7;color:#1c2340;font-size:13px}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#0d1b6e 0%,#1a3a8f 55%,#2952c4 100%);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-title small{display:block;font-size:11px;font-weight:400;opacity:.75;margin-top:2px}
+.hdr-date{text-align:right;font-size:11px;opacity:.8}
+.hdr-date b{font-size:14px;display:block;margin-bottom:2px}
+
+/* SUMBAR */
+.sumbar{background:#fff;display:flex;border-bottom:1px solid #dde2ef;overflow-x:auto}
+.si{padding:11px 18px;border-right:1px solid #edf0f7;flex-shrink:0}
+.si:last-child{border-right:none}
+.sl{font-size:10px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.4px}
+.sv{font-size:19px;font-weight:800;color:#0d1b6e;margin:3px 0 1px;line-height:1.1}
+.ss{font-size:11px}
+.pos{color:#1a7d3a} .neg{color:#c62828} .flat{color:#888}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid #dde2ef;padding:0 24px;display:flex;overflow-x:auto}
+.tab{padding:11px 15px;cursor:pointer;font-size:13px;font-weight:500;color:#8892aa;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
+.tab:hover{color:#0d1b6e}
+.tab.active{color:#0d1b6e;border-bottom-color:#0d1b6e;font-weight:700}
+
+.content{padding:20px 24px}
+.panel{display:none}
+.panel.active{display:block}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #dde2ef;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.kl{font-size:10px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.4px}
+.kv{font-size:21px;font-weight:800;color:#0d1b6e;margin:5px 0 4px;line-height:1}
+.kv.sm{font-size:16px}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.bdg.up{background:#e6f4ea;color:#1a6e33}.bdg.down{background:#fdecea;color:#b71c1c}.bdg.flat{background:#f0f0f0;color:#616161}
+.gbar{height:4px;border-radius:2px;background:#e8eaf6;margin:5px 0 3px;overflow:hidden}
+.gbf{height:100%;background:linear-gradient(90deg,#1a3a8f,#2979ff);border-radius:2px}
+
+/* SECTION TITLE */
+.st{font-size:13px;font-weight:700;color:#0d1b6e;margin:16px 0 9px;padding-bottom:6px;border-bottom:1px solid #dde2ef;display:flex;align-items:center;gap:8px}
+
+/* REGION CARDS */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:18px}
+.rc{background:#fff;border-radius:10px;padding:15px 17px;border:1px solid #dde2ef;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:transform .1s,box-shadow .1s}
+.rc:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.09)}
+.rch{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.rcn{font-size:14px;font-weight:700}
+.rcg{font-size:17px;font-weight:800;color:#0d1b6e;margin-bottom:3px}
+.rccm{font-size:12px;color:#3949ab;font-weight:600;margin-bottom:5px}
+.rcbar{height:4px;background:#e8eaf6;border-radius:2px;margin-bottom:7px;overflow:hidden}
+.rcbf{height:100%;background:linear-gradient(90deg,#1a3a8f,#2979ff);border-radius:2px}
+.rcm{display:flex;gap:10px}
+.rcmi{font-size:11px;color:#8892aa}.rcmi b{color:#1c2340;display:block;font-size:12px}
+
+/* OV BOX */
+.ovbox{background:#0d1b6e;color:#fff;border-radius:10px;padding:16px 22px;margin-bottom:18px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.ovi{display:flex;flex-direction:column}
+.ovl{font-size:10px;opacity:.7;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.ovv{font-size:22px;font-weight:900;margin-top:3px;line-height:1}
+.ovs{font-size:11px;opacity:.75;margin-top:2px}
+.ovd{width:1px;height:44px;background:rgba(255,255,255,.2)}
+
+/* TABLE */
+.tw{background:#fff;border-radius:10px;border:1px solid #dde2ef;overflow:auto;box-shadow:0 1px 4px rgba(0,0,0,.03);margin-bottom:4px}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead{background:#f7f8fc}
+th{padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid #e8eaf2;white-space:nowrap}
+th.r,td.r{text-align:right}
+th.c,td.c{text-align:center}
+/* group header */
+th.grp{background:#eef0fb;color:#3949ab;font-size:10px;text-align:center;border-bottom:1px solid #e8eaf2;border-left:1px solid #dde2ef}
+th.grp-first{border-left:2px solid #3949ab}
+th.sub{background:#f7f8fc;border-left:1px solid #eef0fb}
+th.sub-first{border-left:2px solid #3949ab}
+td{padding:8px 10px;border-bottom:1px solid #f3f4f9;vertical-align:middle}
+td.sep{border-left:2px solid #e8eaf6;background:#fafbff}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8f9ff}
+.rk{width:21px;height:21px;border-radius:50%;background:#eef0fb;color:#0d1b6e;font-weight:700;font-size:10px;display:inline-flex;align-items:center;justify-content:center}
+.rk.top{background:#fff3e0;color:#bf360c}
+.pn{font-weight:600;font-size:12px}
+.pb{height:3px;background:#e8eaf6;overflow:hidden;width:70px;margin-top:3px;border-radius:2px}
+.pbf{height:100%;background:linear-gradient(90deg,#1a3a8f,#2979ff);border-radius:2px}
+.chg{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.chgm{font-size:11px;font-weight:700}
+.chgs{font-size:10px;color:#8892aa}
+/* diff badge */
+.db{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap}
+.db.pos{background:#e6f4ea;color:#1a6e33}.db.neg{background:#fdecea;color:#b71c1c}.db.flat{background:#f0f0f0;color:#616161}
+.na{font-size:11px;color:#ccc}
+/* twin cell - GMV + CM stacked */
+.twin{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.twin-gmv{font-weight:700;font-size:12px}
+.twin-cm{font-size:11px;color:#3949ab;font-weight:600}
+.val-lbl{font-size:9px;color:#8892aa;font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">ð¨ êµ­ë´ìë° ìì ëª¨ëí°ë§
+    <small>êµ­ë´ìë°ì¬ìì¤ Â· ì´ì¹´ì´í¸ ë§¤ëì§ë¨¼í¸</small>
+  </div>
+  <div class="hdr-date"><b>2026ë 3ì 23ì¼ ê¸°ì¤</b>ì£¼ê° ë°ì´í°</div>
+</div>
+
+<div class="sumbar">
+  <div class="si"><div class="sl">ì ì²´ GMV</div><div class="sv">â©6.15ìµ</div><div class="ss flat">7ê° ì§ì­</div></div>
+  <div class="si"><div class="sl">ì ì²´ ê³µíì´ìµ</div><div class="sv">â©7.9M</div><div class="ss flat">í©ì°</div></div>
+  <div class="si"><div class="sl">ì´ ìì½</div><div class="sv">1,251ê±´</div><div class="ss flat">ë£¸ëì 2,014</div></div>
+  <div class="si"><div class="sl">WoW GMV</div><div class="sv pos">â² â©4.02ìµ</div><div class="ss pos">ì ì£¼ ëë¹</div></div>
+  <div class="si"><div class="sl">WoW ê³µíì´ìµ</div><div class="sv pos">â² â©1.7M</div><div class="ss pos">ì ì£¼ ëë¹</div></div>
+  <div class="si"><div class="sl">YoY GMV</div><div class="sv pos">â² â©3.96ìµ</div><div class="ss pos">ì ë ëê¸°</div></div>
+  <div class="si"><div class="sl">YoY ê³µíì´ìµ</div><div class="sv pos">â² â©2.5M</div><div class="ss pos">ì ë ëê¸°</div></div>
+  <div class="si"><div class="sl">íê·  CVR</div><div class="sv">1.64%</div><div class="ss flat">ì  ì§ì­ íê· </div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('_all')" id="tab-_all">ð ì ì²´</div>
+  <div class="tab" onclick="showTab('ì ì£¼ë')" id="tab-ì ì£¼ë">ðï¸ ì ì£¼ë</div>
+  <div class="tab" onclick="showTab('ê²½ê¸°ë')" id="tab-ê²½ê¸°ë">ðï¸ ê²½ê¸°ë</div>
+  <div class="tab" onclick="showTab('ê²½ìë')" id="tab-ê²½ìë">ðï¸ ê²½ìë</div>
+  <div class="tab" onclick="showTab('ê°ìë')" id="tab-ê°ìë">ð² ê°ìë</div>
+  <div class="tab" onclick="showTab('ì ë¼ì¶©ì²­')" id="tab-ì ë¼ì¶©ì²­">ð¾ ì ë¼/ì¶©ì²­</div>
+  <div class="tab" onclick="showTab('ìì¸ í¤ì´ì¹´ì´í¸')" id="tab-ìì¸ í¤ì´ì¹´ì´í¸">ð¼ ìì¸ í¤</div>
+  <div class="tab" onclick="showTab('íì')" id="tab-íì">ð¡ íì</div>
+</div>
+<div class="content">
+<div class="panel active" id="panel-_all">
+<div class="ovbox">
+  <div class="ovi"><div class="ovl">ì ì²´ GMV</div><div class="ovv">â©6.15ìµ</div><div class="ovs">7ê° ì§ì­ í©ì°</div></div>
+  <div class="ovd"></div>
+  <div class="ovi"><div class="ovl">ì ì²´ ê³µíì´ìµ</div><div class="ovv">â©7.9M</div><div class="ovs">ì´ë² ì£¼ í©ì°</div></div>
+  <div class="ovd"></div>
+  <div class="ovi"><div class="ovl">ì´ ìì½</div><div class="ovv">1,251</div><div class="ovs">ë£¸ëì 2,014</div></div>
+  <div class="ovd"></div>
+  <div class="ovi"><div class="ovl">WoW GMV</div><div class="ovv">â²â©4.02ìµ</div><div class="ovs">â² CM â©1.7M</div></div>
+  <div class="ovd"></div>
+  <div class="ovi"><div class="ovl">YoY GMV</div><div class="ovv">â²â©3.96ìµ</div><div class="ovs">â² CM â©2.5M</div></div>
+  <div class="ovd"></div>
+  <div class="ovi"><div class="ovl">íê·  CVR</div><div class="ovv">1.64%</div><div class="ovs">ì  ì§ì­ íê· </div></div>
+</div>
+<div class="st">ì§ì­ë³ GMV íí© <span class="bdg flat" style="font-size:10px">ì¹´ë í´ë¦­ â ì§ì­ ìì¸</span></div>
+<div class="rgrid">
+<div class="rc" onclick="showTab('ì ì£¼ë')">
+  <div class="rch"><span class="rcn">ðï¸ ì ì£¼ë</span><span class="bdg up">â² WoW</span></div>
+  <div class="rcg">â©4.19ìµ</div>
+  <div class="rccm">ê³µíì´ìµ â©1.3M</div>
+  <div class="rcbar"><div class="rcbf" style="width:100%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>688</b>ìì½</div>
+    <div class="rcmi"><b>1.30%</b>CVR</div>
+    <div class="rcmi"><b>68%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('ê²½ê¸°ë')">
+  <div class="rch"><span class="rcn">ðï¸ ê²½ê¸°ë</span><span class="bdg up">â² WoW</span></div>
+  <div class="rcg">â©36.8M</div>
+  <div class="rccm">ê³µíì´ìµ â©1.5M</div>
+  <div class="rcbar"><div class="rcbf" style="width:8%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>108</b>ìì½</div>
+    <div class="rcmi"><b>1.22%</b>CVR</div>
+    <div class="rcmi"><b>6%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('ê²½ìë')">
+  <div class="rch"><span class="rcn">ðï¸ ê²½ìë</span><span class="bdg up">â² WoW</span></div>
+  <div class="rcg">â©67.2M</div>
+  <div class="rccm">ê³µíì´ìµ â©1.9M</div>
+  <div class="rcbar"><div class="rcbf" style="width:16%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>157</b>ìì½</div>
+    <div class="rcmi"><b>1.70%</b>CVR</div>
+    <div class="rcmi"><b>11%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('ê°ìë')">
+  <div class="rch"><span class="rcn">ð² ê°ìë</span><span class="bdg down">â¼ WoW</span></div>
+  <div class="rcg">â©38.5M</div>
+  <div class="rccm">ê³µíì´ìµ â©1.1M</div>
+  <div class="rcbar"><div class="rcbf" style="width:9%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>140</b>ìì½</div>
+    <div class="rcmi"><b>2.23%</b>CVR</div>
+    <div class="rcmi"><b>6%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('ì ë¼ì¶©ì²­')">
+  <div class="rch"><span class="rcn">ð¾ ì ë¼/ì¶©ì²­</span><span class="bdg up">â² WoW</span></div>
+  <div class="rcg">â©9.1M</div>
+  <div class="rccm">ê³µíì´ìµ â©338K</div>
+  <div class="rcbar"><div class="rcbf" style="width:2%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>44</b>ìì½</div>
+    <div class="rcmi"><b>1.86%</b>CVR</div>
+    <div class="rcmi"><b>1%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('ìì¸ í¤ì´ì¹´ì´í¸')">
+  <div class="rch"><span class="rcn">ð¼ ìì¸ í¤</span><span class="bdg down">â¼ WoW</span></div>
+  <div class="rcg">â©11.1M</div>
+  <div class="rccm">ê³µíì´ìµ â©106K</div>
+  <div class="rcbar"><div class="rcbf" style="width:2%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>17</b>ìì½</div>
+    <div class="rcmi"><b>0.78%</b>CVR</div>
+    <div class="rcmi"><b>2%</b>ì ì ì¨</div>
+  </div>
+</div>
+<div class="rc" onclick="showTab('íì')">
+  <div class="rch"><span class="rcn">ð¡ íì</span><span class="bdg up">â² WoW</span></div>
+  <div class="rcg">â©33.8M</div>
+  <div class="rccm">ê³µíì´ìµ â©1.7M</div>
+  <div class="rcbar"><div class="rcbf" style="width:8%"></div></div>
+  <div class="rcm">
+    <div class="rcmi"><b>97</b>ìì½</div>
+    <div class="rcmi"><b>2.36%</b>CVR</div>
+    <div class="rcmi"><b>5%</b>ì ì ì¨</div>
+  </div>
+</div>
+</div>
+<div class="st">ì§ì­ë³ í©ì° ë¹êµ</div>
+<div class="tw"><table>
+<thead>
+<tr>
+  <th rowspan="2">ì§ì­</th>
+  <th rowspan="2" class="r">GMV</th>
+  <th rowspan="2" class="r">ê³µíì´ìµ</th>
+  <th rowspan="2" class="r">ì ì ì¨</th>
+  <th rowspan="2" class="r">ìì½</th>
+  <th rowspan="2" class="r">CVR</th>
+  <th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th>
+  <th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th>
+  <th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th>
+</tr>
+<tr>
+  <th class="r sub sub-first">GMV</th>
+  <th class="r sub">ê³µíì´ìµ</th>
+  <th class="r sub sub-first">GMV</th>
+  <th class="r sub">ê³µíì´ìµ</th>
+  <th class="r sub sub-first">GMV</th>
+  <th class="r sub">ê³µíì´ìµ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><b>ðï¸ ì ì£¼ë</b></td>
+  <td class="r"><b>â©4.19ìµ</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©1.3M</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:68%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">68.1%</span>
+    </div>
+  </td>
+  <td class="r">688</td>
+  <td class="r">1.30%</td>
+  <td class="r sep"><span class="db pos">â² â©3.37ìµ</span></td>
+  <td class="r"><span class="db neg">â¼ â©649K</span></td>
+  <td class="r sep"><span class="db pos">â² â©2.66ìµ</span></td>
+  <td class="r"><span class="db neg">â¼ â©472K</span></td>
+  <td class="r sep"><span class="db pos">â² â©3.17ìµ</span></td>
+  <td class="r"><span class="db neg">â¼ â©846K</span></td>
+</tr>
+<tr>
+  <td><b>ðï¸ ê²½ê¸°ë</b></td>
+  <td class="r"><b>â©36.8M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©1.5M</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:5%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">6.0%</span>
+    </div>
+  </td>
+  <td class="r">108</td>
+  <td class="r">1.22%</td>
+  <td class="r sep"><span class="db pos">â² â©21.2M</span></td>
+  <td class="r"><span class="db pos">â² â©322K</span></td>
+  <td class="r sep"><span class="db pos">â² â©5.7M</span></td>
+  <td class="r"><span class="db pos">â² â©216K</span></td>
+  <td class="r sep"><span class="db pos">â² â©27.8M</span></td>
+  <td class="r"><span class="db pos">â² â©1.0M</span></td>
+</tr>
+<tr>
+  <td><b>ðï¸ ê²½ìë</b></td>
+  <td class="r"><b>â©67.2M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©1.9M</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:10%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">10.9%</span>
+    </div>
+  </td>
+  <td class="r">157</td>
+  <td class="r">1.70%</td>
+  <td class="r sep"><span class="db pos">â² â©11.4M</span></td>
+  <td class="r"><span class="db pos">â² â©790K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©6.1M</span></td>
+  <td class="r"><span class="db pos">â² â©207K</span></td>
+  <td class="r sep"><span class="db pos">â² â©25.6M</span></td>
+  <td class="r"><span class="db pos">â² â©1.3M</span></td>
+</tr>
+<tr>
+  <td><b>ð² ê°ìë</b></td>
+  <td class="r"><b>â©38.5M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©1.1M</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:6%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">6.3%</span>
+    </div>
+  </td>
+  <td class="r">140</td>
+  <td class="r">2.23%</td>
+  <td class="r sep"><span class="db neg">â¼ â©2.4M</span></td>
+  <td class="r"><span class="db neg">â¼ â©127K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©6.2M</span></td>
+  <td class="r"><span class="db neg">â¼ â©351K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©9.3M</span></td>
+  <td class="r"><span class="db neg">â¼ â©433K</span></td>
+</tr>
+<tr>
+  <td><b>ð¾ ì ë¼/ì¶©ì²­</b></td>
+  <td class="r"><b>â©9.1M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©338K</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:1%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">1.5%</span>
+    </div>
+  </td>
+  <td class="r">44</td>
+  <td class="r">1.86%</td>
+  <td class="r sep"><span class="db pos">â² â©1.2M</span></td>
+  <td class="r"><span class="db neg">â¼ â©226K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©11.5M</span></td>
+  <td class="r"><span class="db neg">â¼ â©557K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©9.6M</span></td>
+  <td class="r"><span class="db neg">â¼ â©345K</span></td>
+</tr>
+<tr>
+  <td><b>ð¼ ìì¸ í¤</b></td>
+  <td class="r"><b>â©11.1M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©106K</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:1%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">1.8%</span>
+    </div>
+  </td>
+  <td class="r">17</td>
+  <td class="r">0.78%</td>
+  <td class="r sep"><span class="db neg">â¼ â©80K</span></td>
+  <td class="r"><span class="db neg">â¼ â©129K</span></td>
+  <td class="r sep"><span class="db pos">â² â©408K</span></td>
+  <td class="r"><span class="db neg">â¼ â©190K</span></td>
+  <td class="r sep"><span class="db pos">â² â©10.2M</span></td>
+  <td class="r"><span class="db pos">â² â©81K</span></td>
+</tr>
+<tr>
+  <td><b>ð¡ íì</b></td>
+  <td class="r"><b>â©33.8M</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700">â©1.7M</td>
+  <td class="r">
+    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end">
+      <div style="width:50px;height:4px;background:#e8eaf6;border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:5%;background:linear-gradient(90deg,#1a3a8f,#2979ff)"></div>
+      </div><span style="font-size:11px;font-weight:600">5.5%</span>
+    </div>
+  </td>
+  <td class="r">97</td>
+  <td class="r">2.36%</td>
+  <td class="r sep"><span class="db pos">â² â©33.8M</span></td>
+  <td class="r"><span class="db pos">â² â©1.7M</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="db flat">â â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©33.8M</span></td>
+  <td class="r"><span class="db pos">â² â©1.7M</span></td>
+</tr>
+<tr style="background:#f7f8fc;font-weight:700">
+  <td><b>ð ì ì²´ í©ê³</b></td>
+  <td class="r"><b>â©6.15ìµ</b></td>
+  <td class="r" style="color:#3949ab;font-weight:700"><b>â©7.9M</b></td>
+  <td class="r">100%</td>
+  <td class="r">1,251</td>
+  <td class="r">1.64%</td>
+  <td class="r sep"><span class="db pos">â² â©4.02ìµ</span></td>
+  <td class="r"><span class="db pos">â² â©1.7M</span></td>
+  <td class="r sep"><span class="db pos">â² â©2.48ìµ</span></td>
+  <td class="r"><span class="db neg">â¼ â©1.1M</span></td>
+  <td class="r sep"><span class="db pos">â² â©3.96ìµ</span></td>
+  <td class="r"><span class="db pos">â² â©2.5M</span></td>
+</tr>
+</tbody></table></div>
+<div style="font-size:10px;color:#8892aa;margin-top:4px;padding:0 4px">* 4ì£¼ íê·  ëë¹: ìµê·¼ 4ì£¼ íê· ê°ê³¼ì ì°¨ì´ (MoM ê·¼ì¬ê°)</div>
+</div>
+<div class="panel" id="panel-ì ì£¼ë">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©4.19ìµ</div>
+  <div class="gbar"><div class="gbf" style="width:100%"></div></div>
+  <span class="bdg up">â² WoW â©3.37ìµ</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©1.3M</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ WoW â©649K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm pos">â² â©3.17ìµ</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ CM â©846K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">688</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">1,292</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">1.30%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë¡¯ë°í¸í ì ì£¼</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©3.70ìµ</b></td>
+  <td class="r">544</td><td class="r">1073</td>
+  <td class="r">8.10%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©3.61ìµ</span><span class="chgs">+6.939pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.89ìµ</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.48ìµ</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">íë¥´ëì¤ í¸í ì ì£¼</div><div class="pb"><div class="pbf" style="width:1px"></div></div></td>
+  <td class="r"><b>â©9.8M</b></td>
+  <td class="r">15</td><td class="r">20</td>
+  <td class="r">1.54%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©3.3M</span><span class="chgs">+0.357pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.9M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©9.0M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ íë¬ì¤ ì´í¸íì° ì¤ì íë¡ í¸(Shilla S</div><div class="pb"><div class="pbf" style="width:1px"></div></div></td>
+  <td class="r"><b>â©6.0M</b></td>
+  <td class="r">9</td><td class="r">17</td>
+  <td class="r">0.68%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©3.0M</span><span class="chgs">-0.039pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©164K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©2.0M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">íëì¤ ìì¼ëë(Phoenix Island)</div><div class="pb"><div class="pbf" style="width:1px"></div></div></td>
+  <td class="r"><b>â©5.9M</b></td>
+  <td class="r">12</td><td class="r">23</td>
+  <td class="r">1.24%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.6M</span><span class="chgs">-0.236pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.0M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©5.2M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">í¸í íì¬ë½ ì ì£¼(Hotel Whistlelark Je</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©3.4M</b></td>
+  <td class="r">16</td><td class="r">26</td>
+  <td class="r">2.07%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.1M</span><span class="chgs">+0.865pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©251K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ê·¸ëë ì¡°ì  ì ì£¼</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©2.9M</b></td>
+  <td class="r">4</td><td class="r">7</td>
+  <td class="r">0.84%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.9M</span><span class="chgs">+0.844pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©842K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©4.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ì¼ì±í´ë¦¬ì¡°í¸ ìê·í¬(Kensington Resort S</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©2.4M</b></td>
+  <td class="r">7</td><td class="r">12</td>
+  <td class="r">1.09%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©378K</span><span class="chgs">-0.881pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©515K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©502K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ëí¼ì¤í¸70 í¸í(The First70 Hotel)</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©2.4M</b></td>
+  <td class="r">16</td><td class="r">30</td>
+  <td class="r">2.10%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©2.4M</span><span class="chgs">-1.341pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©847K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©2.1M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ì ì£¼ì ë¼í¸í</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©2.3M</b></td>
+  <td class="r">3</td><td class="r">5</td>
+  <td class="r">0.77%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©14.3M</span><span class="chgs">-1.038pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©6.0M</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©16.4M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ë©ì¢ ê¸ëë ì ì£¼(Maison Glad Jeju)</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©1.7M</b></td>
+  <td class="r">5</td><td class="r">7</td>
+  <td class="r">1.24%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©2.6M</span><span class="chgs">+0.417pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©1.4M</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ë² ì¤í¸ì¨ì¤í´ ì ì£¼ í¸í(Best Western Jeju</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©1.6M</b></td>
+  <td class="r">10</td><td class="r">12</td>
+  <td class="r">2.14%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©49K</span><span class="chgs">-0.384pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©4K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©648K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">íë  í´ë¦¬í í¸í ì¤ ë¤ì´ì²(Hidden Cliff H</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©1.4M</b></td>
+  <td class="r">6</td><td class="r">8</td>
+  <td class="r">1.06%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©1.1M</span><span class="chgs">-0.117pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.2M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©858K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">Phoenix Island Jeju</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©242K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.46%</div></td>
+  <td class="r sep"><span class="db pos">â² â©70K</span></td>
+  <td class="r"><span class="val-lbl">â©171K</span></td>
+  <td class="r sep"><span class="db pos">â² â©105K</span></td>
+  <td class="r"><span class="val-lbl">â©136K</span></td>
+  <td class="r sep"><span class="db pos">â² â©231K</span></td>
+  <td class="r"><span class="val-lbl">â©10K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">íë¥´ëì¤ í¸í ì ì£¼(PARNAS HOTEL JEJU)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©222K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  3.99%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©30K</span></td>
+  <td class="r"><span class="val-lbl">â©252K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©102K</span></td>
+  <td class="r"><span class="val-lbl">â©324K</span></td>
+  <td class="r sep"><span class="db pos">â² â©216K</span></td>
+  <td class="r"><span class="val-lbl">â©5K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ íë¬ì¤ ì´í¸íì°(Shilla Stay Plu</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©100K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.39%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©29K</span></td>
+  <td class="r"><span class="val-lbl">â©129K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©86K</span></td>
+  <td class="r"><span class="val-lbl">â©186K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©67K</span></td>
+  <td class="r"><span class="val-lbl">â©167K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">íë¼ì¤íì´ ì ì£¼(Tamna Stay Hotel Jeju</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©91K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.17%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©96K</span></td>
+  <td class="r sep"><span class="db pos">â² â©822</span></td>
+  <td class="r"><span class="val-lbl">â©90K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©68K</span></td>
+  <td class="r"><span class="val-lbl">â©158K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">í¸í íì¬ë½ ì ì£¼(Hotel Whistle Rock J</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©84K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  2.79%</div></td>
+  <td class="r sep"><span class="db pos">â² â©48K</span></td>
+  <td class="r"><span class="val-lbl">â©36K</span></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©57K</span></td>
+  <td class="r sep"><span class="db pos">â² â©50K</span></td>
+  <td class="r"><span class="val-lbl">â©34K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ì¼ì±í´ë¦¬ì¡°í¸ ìê·í¬</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©80K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.28%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©29K</span></td>
+  <td class="r"><span class="val-lbl">â©109K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©90K</span></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©53K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ë ë² ì¤í¸ ì ì£¼ ì±ì° í¸í(The Best Jeju S</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©77K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  7.26%</div></td>
+  <td class="r sep"><span class="db pos">â² â©34K</span></td>
+  <td class="r"><span class="val-lbl">â©43K</span></td>
+  <td class="r sep"><span class="db pos">â² â©39K</span></td>
+  <td class="r"><span class="val-lbl">â©38K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©104K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ê·¸ëë ì¡°ì  í ì¤ìí¸(Grand Josun Hill </div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©64K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.18%</div></td>
+  <td class="r sep"><span class="db pos">â² â©64K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©69K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©163K</span></td>
+  <td class="r"><span class="val-lbl">â©228K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">í¸íë¸ë¦¿ì§ ìê·í¬(Hotel Bridge Seogwip</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©58K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  7.11%</div></td>
+  <td class="r sep"><span class="db pos">â² â©32K</span></td>
+  <td class="r"><span class="val-lbl">â©26K</span></td>
+  <td class="r sep"><span class="db pos">â² â©30K</span></td>
+  <td class="r"><span class="val-lbl">â©28K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©269K</span></td>
+  <td class="r"><span class="val-lbl">â©328K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ëí¼ì¤í¸70 í¸í</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©56K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  2.44%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©59K</span></td>
+  <td class="r"><span class="val-lbl">â©115K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©6K</span></td>
+  <td class="r"><span class="val-lbl">â©62K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©95K</span></td>
+  <td class="r"><span class="val-lbl">â©151K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ë©ì¢ ê¸ëë ì ì£¼(Maison Glad Jeju)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©54K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©99K</span></td>
+  <td class="r"><span class="val-lbl">â©153K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©45K</span></td>
+  <td class="r"><span class="val-lbl">â©99K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©74K</span></td>
+  <td class="r"><span class="val-lbl">â©129K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ë² ì¤í¸ì¨ì¤í´ ì ì£¼í¸í</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©33K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  2.62%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©37K</span></td>
+  <td class="r"><span class="val-lbl">â©70K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©2K</span></td>
+  <td class="r"><span class="val-lbl">â©34K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©47K</span></td>
+  <td class="r"><span class="val-lbl">â©79K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">13</span></td>
+  <td><div class="pn">ìì½ëë í¸í(Ecoland Hotel)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©27K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©74K</span></td>
+  <td class="r"><span class="val-lbl">â©101K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©26K</span></td>
+  <td class="r"><span class="val-lbl">â©53K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©34K</span></td>
+  <td class="r"><span class="val-lbl">â©61K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">14</span></td>
+  <td><div class="pn">ì ì£¼ íë¦¼ë¦¬ì¡°í¸(HALLIM RESORT)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©23K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.02%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©184K</span></td>
+  <td class="r"><span class="val-lbl">â©207K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©86K</span></td>
+  <td class="r"><span class="val-lbl">â©109K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©36K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">15</span></td>
+  <td><div class="pn">ì(WE)í¸í ì ì£¼</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©13K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  6.32%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©153K</span></td>
+  <td class="r"><span class="val-lbl">â©166K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©41K</span></td>
+  <td class="r"><span class="val-lbl">â©54K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©8K</span></td>
+  <td class="r"><span class="val-lbl">â©21K</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-ê²½ê¸°ë">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©36.8M</div>
+  <div class="gbar"><div class="gbf" style="width:8%"></div></div>
+  <span class="bdg up">â² WoW â©21.2M</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©1.5M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² WoW â©322K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm pos">â² â©27.8M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² CM â©1.0M</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">108</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">125</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">1.22%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë¸ë³´í ì°ë°°ìë ìì¸ ëëë¬¸ í¸í&ë ì§ëì¤</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©12.6M</b></td>
+  <td class="r">37</td><td class="r">38</td>
+  <td class="r">1.84%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©10.0M</span><span class="chgs">+1.754pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©8.3M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©12.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ìë´íë¼ë¤ì´ì¤í¸í</div><div class="pb"><div class="pbf" style="width:26px"></div></div></td>
+  <td class="r"><b>â©5.2M</b></td>
+  <td class="r">25</td><td class="r">28</td>
+  <td class="r">0.68%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©5.0M</span><span class="chgs">+0.115pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.7M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©4.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ë¤ì¤í¸ í¸í ì¸ì²(Nest Hotel Incheon)</div><div class="pb"><div class="pbf" style="width:24px"></div></div></td>
+  <td class="r"><b>â©4.7M</b></td>
+  <td class="r">14</td><td class="r">17</td>
+  <td class="r">2.59%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©2.0M</span><span class="chgs">+0.672pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©68K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.1M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ëª¬ëë¦¬ì ìì¸ ì´íì(Mondrian Seoul Ita</div><div class="pb"><div class="pbf" style="width:14px"></div></div></td>
+  <td class="r"><b>â©2.9M</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">1.33%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.9M</span><span class="chgs">+1.333pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.8M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.9M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ë¸ë³´í ì¤ìí¸ ì°ë°°ìë ìì¸ ì©ì°(Novotel Sui</div><div class="pb"><div class="pbf" style="width:12px"></div></div></td>
+  <td class="r"><b>â©2.4M</b></td>
+  <td class="r">3</td><td class="r">6</td>
+  <td class="r">2.00%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.4M</span><span class="chgs">+2.000pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.2M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©899K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">Pullman Ambassador Seoul Eastp</div><div class="pb"><div class="pbf" style="width:6px"></div></div></td>
+  <td class="r"><b>â©1.2M</b></td>
+  <td class="r">3</td><td class="r">3</td>
+  <td class="r">0.91%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©168K</span><span class="chgs">+0.256pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©304K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.2M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ì ì´ì¤íí¬ í¸í(JN Park Hotel)</div><div class="pb"><div class="pbf" style="width:5px"></div></div></td>
+  <td class="r"><b>â©1.0M</b></td>
+  <td class="r">5</td><td class="r">6</td>
+  <td class="r">0.75%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.0M</span><span class="chgs">+0.752pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©883K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©841K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ë©ì´íë í¸í</div><div class="pb"><div class="pbf" style="width:5px"></div></div></td>
+  <td class="r"><b>â©982K</b></td>
+  <td class="r">1</td><td class="r">3</td>
+  <td class="r">0.18%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©593K</span><span class="chgs">-0.053pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©237K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©586K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ë¸ë³´í ì°ë°°ìë ì©ì°  - ìì¸ëëê³¤ìí°(Novotel</div><div class="pb"><div class="pbf" style="width:4px"></div></div></td>
+  <td class="r"><b>â©941K</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">1.38%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©941K</span><span class="chgs">+1.379pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©387K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©756K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">í¸í ëë£¨ ìì¸-ì ê°¤ë¬ë¦¬(Hotel Naru Seoul</div><div class="pb"><div class="pbf" style="width:3px"></div></div></td>
+  <td class="r"><b>â©775K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">0.65%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©32K</span><span class="chgs">+0.654pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©1.5M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©379K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ë¨¸íì´ ì°ë°°ìë ìì¸ ë§ê³¡(Mercure Ambassa</div><div class="pb"><div class="pbf" style="width:3px"></div></div></td>
+  <td class="r"><b>â©751K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">1.27%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©751K</span><span class="chgs">+1.266pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©1.5M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©165K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ë§ì´ë¤ì¤ í¸í&ë¦¬ì¡°í¸</div><div class="pb"><div class="pbf" style="width:3px"></div></div></td>
+  <td class="r"><b>â©586K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">0.45%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©550K</span><span class="chgs">-1.139pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©2.0M</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©127K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë¸ë³´í ì°ë°°ìë ìì¸ ëëë¬¸ í¸í & ë ì§ëì¤(Novo</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©636K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  7.08%</div></td>
+  <td class="r sep"><span class="db pos">â² â©550K</span></td>
+  <td class="r"><span class="val-lbl">â©86K</span></td>
+  <td class="r sep"><span class="db pos">â² â©438K</span></td>
+  <td class="r"><span class="val-lbl">â©197K</span></td>
+  <td class="r sep"><span class="db pos">â² â©636K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ë¤ì¤í¸ í¸í ì¸ì²(Nest Hotel Incheon)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©298K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  8.54%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©158K</span></td>
+  <td class="r"><span class="val-lbl">â©456K</span></td>
+  <td class="r sep"><span class="db pos">â² â©33K</span></td>
+  <td class="r"><span class="val-lbl">â©265K</span></td>
+  <td class="r sep"><span class="db pos">â² â©82K</span></td>
+  <td class="r"><span class="val-lbl">â©216K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ìë´ íë¼ë¤ì´ì¤ í¸í(Eden Paradise Hote</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©254K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  6.5%</div></td>
+  <td class="r sep"><span class="db pos">â² â©254K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©161K</span></td>
+  <td class="r"><span class="val-lbl">â©93K</span></td>
+  <td class="r sep"><span class="db pos">â² â©245K</span></td>
+  <td class="r"><span class="val-lbl">â©9K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ë¸ë³´í ì¤ìí¸ ì°ë°°ìë ìì¸ ì©ì°(Novotel Sui</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©95K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.05%</div></td>
+  <td class="r sep"><span class="db pos">â² â©95K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©60K</span></td>
+  <td class="r"><span class="val-lbl">â©36K</span></td>
+  <td class="r sep"><span class="db pos">â² â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©88K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ë¨¸íì´ ì°ë°°ìë ìì¸ ë§ê³¡(Mercure Ambassa</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©46K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  6.18%</div></td>
+  <td class="r sep"><span class="db pos">â² â©46K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©40K</span></td>
+  <td class="r"><span class="val-lbl">â©86K</span></td>
+  <td class="r sep"><span class="db pos">â² â©38K</span></td>
+  <td class="r"><span class="val-lbl">â©8K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ëë£¨ ì°ë°°ìë í¸í ìì¸ - ì ê°¤ë¬ë¦¬ ì»¬ë ì(Naru </div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©33K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.28%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©1K</span></td>
+  <td class="r"><span class="val-lbl">â©35K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©2K</span></td>
+  <td class="r"><span class="val-lbl">â©35K</span></td>
+  <td class="r sep"><span class="db pos">â² â©16K</span></td>
+  <td class="r"><span class="val-lbl">â©17K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">La Vie Dor Hotel and Resort Tr</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©27K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  11.56%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©87K</span></td>
+  <td class="r"><span class="val-lbl">â©114K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©16K</span></td>
+  <td class="r"><span class="val-lbl">â©43K</span></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">íë§ ì°ë°°ìë ìì¸ ì´ì¤í¸í´(Pullman Ambass</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©23K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  1.81%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©50K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©25K</span></td>
+  <td class="r"><span class="val-lbl">â©48K</span></td>
+  <td class="r sep"><span class="db pos">â² â©23K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ìì¼ëë ìºì¬ í¸í & ìí°íí¬</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©20K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©17K</span></td>
+  <td class="r"><span class="val-lbl">â©4K</span></td>
+  <td class="r sep"><span class="db pos">â² â©6K</span></td>
+  <td class="r"><span class="val-lbl">â©14K</span></td>
+  <td class="r sep"><span class="db pos">â² â©20K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ë¡¤ë§ íì¤ í¸í(Rolling Hills Hotel)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©15K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.26%</div></td>
+  <td class="r sep"><span class="db pos">â² â©15K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©14K</span></td>
+  <td class="r"><span class="val-lbl">â©29K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©23K</span></td>
+  <td class="r"><span class="val-lbl">â©38K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ìí ëì¤íí´ ë¹ë¦¬ì§(Yangpyeong The Sta</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©13K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©13K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©21K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ì ì´ì¤íí¬ í¸í(JN Park Hotel)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©11K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  2.28%</div></td>
+  <td class="r sep"><span class="db pos">â² â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©62K</span></td>
+  <td class="r"><span class="val-lbl">â©73K</span></td>
+  <td class="r sep"><span class="db pos">â² â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">13</span></td>
+  <td><div class="pn">ì ëìì¼ëë ë ì¤íë¹(Uniisland The Spa</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©11K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  2.9%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©39</span></td>
+  <td class="r"><span class="val-lbl">â©11K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©22K</span></td>
+  <td class="r sep"><span class="db pos">â² â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">14</span></td>
+  <td><div class="pn">ë¸ë³´í ì°ë°°ìë ì©ì°  - ìì¸ëëê³¤ìí°(Novotel</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©7K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  1.09%</div></td>
+  <td class="r sep"><span class="db pos">â² â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©10K</span></td>
+  <td class="r"><span class="val-lbl">â©17K</span></td>
+  <td class="r sep"><span class="db pos">â² â©1K</span></td>
+  <td class="r"><span class="val-lbl">â©6K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">15</span></td>
+  <td><div class="pn">ëª¬ëë¦¬ì ìì¸ ì´íì(Mondrian Seoul Ita</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©22K</span></td>
+  <td class="r"><span class="val-lbl">â©22K</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-ê²½ìë">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©67.2M</div>
+  <div class="gbar"><div class="gbf" style="width:16%"></div></div>
+  <span class="bdg up">â² WoW â©11.4M</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©1.9M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² WoW â©790K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm pos">â² â©25.6M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² CM â©1.3M</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">157</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">248</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">1.70%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ìëí° ì³ ë¶ì° ì½ë¸(Ananti at Busan Co</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©9.1M</b></td>
+  <td class="r">18</td><td class="r">29</td>
+  <td class="r">1.64%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©5.9M</span><span class="chgs">+0.860pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©4.9M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©7.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ìëí° ì³ ë¶ì° ë¹ë¼ì¥¬(Ananti at Busan V</div><div class="pb"><div class="pbf" style="width:44px"></div></div></td>
+  <td class="r"><b>â©6.2M</b></td>
+  <td class="r">7</td><td class="r">13</td>
+  <td class="r">0.82%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©648K</span><span class="chgs">-0.979pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©505K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©2.7M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ ë¶ì° í´ì´ë(Shilla Stay Busan</div><div class="pb"><div class="pbf" style="width:43px"></div></div></td>
+  <td class="r"><b>â©6.1M</b></td>
+  <td class="r">11</td><td class="r">19</td>
+  <td class="r">2.10%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©3.7M</span><span class="chgs">+1.163pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.4M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©4.7M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ì½ëª¨ëí¸í ê²½ì£¼(Commodore Hotel Gyeon</div><div class="pb"><div class="pbf" style="width:43px"></div></div></td>
+  <td class="r"><b>â©6.0M</b></td>
+  <td class="r">14</td><td class="r">23</td>
+  <td class="r">2.66%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©4.3M</span><span class="chgs">+1.406pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.9M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©5.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">í¨ì´ì¤íì´ ë¶ì°ì¡ë</div><div class="pb"><div class="pbf" style="width:33px"></div></div></td>
+  <td class="r"><b>â©4.7M</b></td>
+  <td class="r">2</td><td class="r">31</td>
+  <td class="r">3.45%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©4.7M</span><span class="chgs">+3.448pp</span></div></td>
+  <td class="r"><span class="flat" style="font-size:11px;font-weight:700">â â©0</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ë¼íìë í¸ ê²½ì£¼</div><div class="pb"><div class="pbf" style="width:31px"></div></div></td>
+  <td class="r"><b>â©4.3M</b></td>
+  <td class="r">4</td><td class="r">9</td>
+  <td class="r">0.53%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©6.2M</span><span class="chgs">-0.736pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©4.7M</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©1.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ê·¸ëë ì¡°ì  ë¶ì°</div><div class="pb"><div class="pbf" style="width:25px"></div></div></td>
+  <td class="r"><b>â©3.6M</b></td>
+  <td class="r">6</td><td class="r">11</td>
+  <td class="r">2.73%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©227K</span><span class="chgs">+0.049pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©96K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.2M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">íí¼ ê²½ì£¼(Hilton Gyeongju)</div><div class="pb"><div class="pbf" style="width:18px"></div></div></td>
+  <td class="r"><b>â©2.5M</b></td>
+  <td class="r">7</td><td class="r">7</td>
+  <td class="r">1.03%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.1M</span><span class="chgs">+1.031pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©842K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©200K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ìëí° ì³ ë¨í´(Ananti at Namhae)</div><div class="pb"><div class="pbf" style="width:16px"></div></div></td>
+  <td class="r"><b>â©2.3M</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">0.00%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©2.3M</span><span class="chgs">+0.000pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©437K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.3M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ìë¤ ê·¸ëë ë¶ì° ì´ì§(Wyndham Grand Bus</div><div class="pb"><div class="pbf" style="width:13px"></div></div></td>
+  <td class="r"><b>â©1.9M</b></td>
+  <td class="r">5</td><td class="r">6</td>
+  <td class="r">1.09%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.0M</span><span class="chgs">+0.077pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©843K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.7M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ë¬¸ê²½ STXë¦¬ì¡°í¸</div><div class="pb"><div class="pbf" style="width:11px"></div></div></td>
+  <td class="r"><b>â©1.6M</b></td>
+  <td class="r">7</td><td class="r">7</td>
+  <td class="r">6.82%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.2M</span><span class="chgs">+6.818pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©892K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.2M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ê²½ì£¼ ì½ì¤ë¡±í¸í (ë¶êµ­ì¬ 1ë¶ ê±°ë¦¬)</div><div class="pb"><div class="pbf" style="width:10px"></div></div></td>
+  <td class="r"><b>â©1.5M</b></td>
+  <td class="r">4</td><td class="r">4</td>
+  <td class="r">2.22%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.2M</span><span class="chgs">+1.670pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©29K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©858K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ í´ì´ë ë²¡ì¤ì½(Shilla Stay Haeu</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©330K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.69%</div></td>
+  <td class="r sep"><span class="db pos">â² â©266K</span></td>
+  <td class="r"><span class="val-lbl">â©64K</span></td>
+  <td class="r sep"><span class="db pos">â² â©212K</span></td>
+  <td class="r"><span class="val-lbl">â©118K</span></td>
+  <td class="r sep"><span class="db pos">â² â©271K</span></td>
+  <td class="r"><span class="val-lbl">â©60K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ìëí° ì³ ë¶ì° ì½ë¸(Ananti at Busan Co</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©311K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.22%</div></td>
+  <td class="r sep"><span class="db pos">â² â©191K</span></td>
+  <td class="r"><span class="val-lbl">â©119K</span></td>
+  <td class="r sep"><span class="db pos">â² â©184K</span></td>
+  <td class="r"><span class="val-lbl">â©127K</span></td>
+  <td class="r sep"><span class="db pos">â² â©299K</span></td>
+  <td class="r"><span class="val-lbl">â©12K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">í¨ì´ì¤íì´ ë¶ì°ì¡ë</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©276K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db pos">â² â©276K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©276K</span></td>
+  <td class="r sep"><span class="db pos">â² â©222K</span></td>
+  <td class="r"><span class="val-lbl">â©53K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ìëí° ì³ ë¶ì° ë¹ë¼ì¥¬(Ananti at Busan V</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©150K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.7%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©46K</span></td>
+  <td class="r"><span class="val-lbl">â©195K</span></td>
+  <td class="r sep"><span class="db pos">â² â©18K</span></td>
+  <td class="r"><span class="val-lbl">â©132K</span></td>
+  <td class="r sep"><span class="db pos">â² â©60K</span></td>
+  <td class="r"><span class="val-lbl">â©90K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ê·¸ëë ì¡°ì  ë¶ì°</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©119K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©61K</span></td>
+  <td class="r"><span class="val-lbl">â©58K</span></td>
+  <td class="r sep"><span class="db pos">â² â©19K</span></td>
+  <td class="r"><span class="val-lbl">â©100K</span></td>
+  <td class="r sep"><span class="db pos">â² â©119K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">Hilton Gyeongju</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©88K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.1%</div></td>
+  <td class="r sep"><span class="db pos">â² â©69K</span></td>
+  <td class="r"><span class="val-lbl">â©20K</span></td>
+  <td class="r sep"><span class="db pos">â² â©33K</span></td>
+  <td class="r"><span class="val-lbl">â©55K</span></td>
+  <td class="r sep"><span class="db pos">â² â©88K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ê²½ì£¼ ì½ì¤ë¡±í¸í (ë¶êµ­ì¬ 1ë¶ ê±°ë¦¬)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©63K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db pos">â² â©63K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©26K</span></td>
+  <td class="r"><span class="val-lbl">â©37K</span></td>
+  <td class="r sep"><span class="db pos">â² â©63K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ìë¤ ê·¸ëë ë¶ì° ì´ì§(Wyndham Grand Bus</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©60K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.04%</div></td>
+  <td class="r sep"><span class="db pos">â² â©31K</span></td>
+  <td class="r"><span class="val-lbl">â©29K</span></td>
+  <td class="r sep"><span class="db pos">â² â©16K</span></td>
+  <td class="r"><span class="val-lbl">â©44K</span></td>
+  <td class="r sep"><span class="db pos">â² â©60K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ìëí° ë¨í´(Ananti at Namhae)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©51K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.28%</div></td>
+  <td class="r sep"><span class="db pos">â² â©51K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©46K</span></td>
+  <td class="r sep"><span class="db pos">â² â©51K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">UH ì¤ìí¸ ë í´ì´ë(UH Suite The Haen</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©47K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©22K</span></td>
+  <td class="r"><span class="val-lbl">â©25K</span></td>
+  <td class="r sep"><span class="db pos">â² â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©36K</span></td>
+  <td class="r sep"><span class="db pos">â² â©34K</span></td>
+  <td class="r"><span class="val-lbl">â©13K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">íë¼ë¤ì´ì¤ í¸í ë¶ì°</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©41K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db pos">â² â©41K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©38K</span></td>
+  <td class="r"><span class="val-lbl">â©4K</span></td>
+  <td class="r sep"><span class="db pos">â² â©41K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ë¼ë°ì¤ í¸í(Lavalse Hotel (Korea Qu</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©40K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.5%</div></td>
+  <td class="r sep"><span class="db pos">â² â©42K</span></td>
+  <td class="r"><span class="val-lbl">â©-2K</span></td>
+  <td class="r sep"><span class="db pos">â² â©26K</span></td>
+  <td class="r"><span class="val-lbl">â©14K</span></td>
+  <td class="r sep"><span class="db pos">â² â©40K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">13</span></td>
+  <td><div class="pn">í¸í ì¸í°ë¶ê³  ëêµ¬(Hotel Inter-Burgo D</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©33K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©8K</span></td>
+  <td class="r"><span class="val-lbl">â©25K</span></td>
+  <td class="r sep"><span class="db pos">â² â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©27K</span></td>
+  <td class="r sep"><span class="db pos">â² â©30K</span></td>
+  <td class="r"><span class="val-lbl">â©4K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">14</span></td>
+  <td><div class="pn">ë¼ë§ë¤ ìì½ë¥´ ë°ì´ ìë¤ ë¶ì° í´ì´ë(Ramada En</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©29K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  3.93%</div></td>
+  <td class="r sep"><span class="db pos">â² â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©18K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©8K</span></td>
+  <td class="r"><span class="val-lbl">â©37K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©9K</span></td>
+  <td class="r"><span class="val-lbl">â©38K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">15</span></td>
+  <td><div class="pn">ë¶ì° ììí° ë ì§ëì¤</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©29K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.77%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©55K</span></td>
+  <td class="r"><span class="val-lbl">â©84K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©19K</span></td>
+  <td class="r"><span class="val-lbl">â©48K</span></td>
+  <td class="r sep"><span class="db pos">â² â©29K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-ê°ìë">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©38.5M</div>
+  <div class="gbar"><div class="gbf" style="width:9%"></div></div>
+  <span class="bdg down">â¼ WoW â©2.4M</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©1.1M</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ WoW â©127K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm neg">â¼ â©9.3M</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ CM â©433K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">140</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">175</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">2.23%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë ê³ ëë ì½ë¦¬ì ë¦¬ì¡°í¸(LEGOLAND Korea Re</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©8.8M</b></td>
+  <td class="r">27</td><td class="r">28</td>
+  <td class="r">2.04%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©4.4M</span><span class="chgs">+0.042pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©333K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©7.4M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ìì´ìì´íí¬ì¤ìí¸í¸í ì¤ ë¦¬ì¡°í¸(Sokcho I-Par</div><div class="pb"><div class="pbf" style="width:42px"></div></div></td>
+  <td class="r"><b>â©5.7M</b></td>
+  <td class="r">12</td><td class="r">15</td>
+  <td class="r">3.09%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©4.4M</span><span class="chgs">+1.076pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.8M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©5.6M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì¤ìí¬ì  ë¦¬ì¡°í¸ ìì´ ì¤ì ë¹ì¹ í¸í ì¤ ì½ë(Ocea</div><div class="pb"><div class="pbf" style="width:23px"></div></div></td>
+  <td class="r"><b>â©3.2M</b></td>
+  <td class="r">9</td><td class="r">17</td>
+  <td class="r">0.78%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©2.4M</span><span class="chgs">-5.219pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.6M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©3.1M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ì¨ í¬ë£¨ì¦ í¸í(Sea Cruise Hotel)</div><div class="pb"><div class="pbf" style="width:14px"></div></div></td>
+  <td class="r"><b>â©2.0M</b></td>
+  <td class="r">7</td><td class="r">11</td>
+  <td class="r">2.30%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.8M</span><span class="chgs">+2.299pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©1.3M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©266K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ì²´ì¤í°í¤ì¤ ìì´</div><div class="pb"><div class="pbf" style="width:10px"></div></div></td>
+  <td class="r"><b>â©1.4M</b></td>
+  <td class="r">5</td><td class="r">6</td>
+  <td class="r">1.60%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©1.4M</span><span class="chgs">-1.453pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©175K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©740K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ë¥´ì»¬ë í°ë¸ ìì´ì¤ì(Le Collective Sokch</div><div class="pb"><div class="pbf" style="width:10px"></div></div></td>
+  <td class="r"><b>â©1.4M</b></td>
+  <td class="r">3</td><td class="r">4</td>
+  <td class="r">4.35%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.0M</span><span class="chgs">+0.426pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©777K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©998K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">UH íë« ë ìì´(UH Flat The Sokcho)</div><div class="pb"><div class="pbf" style="width:9px"></div></div></td>
+  <td class="r"><b>â©1.3M</b></td>
+  <td class="r">8</td><td class="r">10</td>
+  <td class="r">0.79%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©633K</span><span class="chgs">-0.068pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©477K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.3M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">í¸í íì¤í ì ëì§(Hotel TOPS 10 Jeong</div><div class="pb"><div class="pbf" style="width:9px"></div></div></td>
+  <td class="r"><b>â©1.2M</b></td>
+  <td class="r">5</td><td class="r">7</td>
+  <td class="r">0.66%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©2.4M</span><span class="chgs">-0.903pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©374K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">SL í¸í ê°ë¦(SL Hotel Gangneung)</div><div class="pb"><div class="pbf" style="width:8px"></div></div></td>
+  <td class="r"><b>â©1.2M</b></td>
+  <td class="r">4</td><td class="r">5</td>
+  <td class="r">3.19%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.2M</span><span class="chgs">+3.192pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©737K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©861K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ì¼ì±í´ë¦¬ì¡°í¸ ì¤ìë¹ì¹(Kensington Resort </div><div class="pb"><div class="pbf" style="width:7px"></div></div></td>
+  <td class="r"><b>â©960K</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">1.15%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©641K</span><span class="chgs">-0.184pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©84K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©770K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ëë¯¸ëí´ë¼ë° ìì´(Dominica Clava Sokch</div><div class="pb"><div class="pbf" style="width:7px"></div></div></td>
+  <td class="r"><b>â©958K</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">8.70%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©958K</span><span class="chgs">+8.696pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©360K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©958K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ê°ë¦ ì»¨í¼ë¤ì¤ ì¤ì ì¤ìí¸(Gangneung Confi</div><div class="pb"><div class="pbf" style="width:6px"></div></div></td>
+  <td class="r"><b>â©892K</b></td>
+  <td class="r">5</td><td class="r">6</td>
+  <td class="r">0.60%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©710K</span><span class="chgs">+0.602pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©45K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©597K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë ê³ ëë ì½ë¦¬ì ë¦¬ì¡°í¸(Legoland Korea Re</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©282K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.8%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©43K</span></td>
+  <td class="r"><span class="val-lbl">â©326K</span></td>
+  <td class="r sep"><span class="db pos">â² â©41K</span></td>
+  <td class="r"><span class="val-lbl">â©241K</span></td>
+  <td class="r sep"><span class="db pos">â² â©272K</span></td>
+  <td class="r"><span class="val-lbl">â©10K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ì¤ìí¬ì ë¦¬ì¡°í¸ ì¤ìë¹ì¹ í¸íì¤ì½ë</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©93K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.36%</div></td>
+  <td class="r sep"><span class="db pos">â² â©86K</span></td>
+  <td class="r"><span class="val-lbl">â©7K</span></td>
+  <td class="r sep"><span class="db pos">â² â©52K</span></td>
+  <td class="r"><span class="val-lbl">â©42K</span></td>
+  <td class="r sep"><span class="db pos">â² â©93K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì²´ì¤í°í¤ì¤ ìì´</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©65K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©66K</span></td>
+  <td class="r"><span class="val-lbl">â©131K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©17K</span></td>
+  <td class="r"><span class="val-lbl">â©82K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©4K</span></td>
+  <td class="r"><span class="val-lbl">â©69K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ì¨í¬ë£¨ì¦í¸í(SeaCruise Hotel)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©60K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©53K</span></td>
+  <td class="r"><span class="val-lbl">â©7K</span></td>
+  <td class="r sep"><span class="db pos">â² â©37K</span></td>
+  <td class="r"><span class="val-lbl">â©23K</span></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©47K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ë¥´ì»¬ë í°ë¸ ìì´ì¤ì(Le Collective Sokch</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©59K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©47K</span></td>
+  <td class="r"><span class="val-lbl">â©11K</span></td>
+  <td class="r sep"><span class="db pos">â² â©37K</span></td>
+  <td class="r"><span class="val-lbl">â©21K</span></td>
+  <td class="r sep"><span class="db pos">â² â©42K</span></td>
+  <td class="r"><span class="val-lbl">â©16K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">UH FLAT The ìì´(UH FLAT The Sok</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©56K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.4%</div></td>
+  <td class="r sep"><span class="db pos">â² â©23K</span></td>
+  <td class="r"><span class="val-lbl">â©32K</span></td>
+  <td class="r sep"><span class="db pos">â² â©23K</span></td>
+  <td class="r"><span class="val-lbl">â©33K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©79K</span></td>
+  <td class="r"><span class="val-lbl">â©134K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ì¼ì±í´ë¦¬ì¡°í¸ ì¤ìë¹ì¹</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©47K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.89%</div></td>
+  <td class="r sep"><span class="db pos">â² â©6K</span></td>
+  <td class="r"><span class="val-lbl">â©41K</span></td>
+  <td class="r sep"><span class="db pos">â² â©4K</span></td>
+  <td class="r"><span class="val-lbl">â©43K</span></td>
+  <td class="r sep"><span class="db pos">â² â©39K</span></td>
+  <td class="r"><span class="val-lbl">â©8K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ìì´ ìì´íí¬ ì¤ìí¸ í¸í & ë ì§ëì¤(Sokcho I</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©44K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.44%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©583</span></td>
+  <td class="r"><span class="val-lbl">â©45K</span></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©31K</span></td>
+  <td class="r sep"><span class="db pos">â² â©42K</span></td>
+  <td class="r"><span class="val-lbl">â©2K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">í¸í íì¤í(Hotel Tops 10)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©37K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  3.59%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©36K</span></td>
+  <td class="r"><span class="val-lbl">â©73K</span></td>
+  <td class="r sep"><span class="db pos">â² â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©32K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©105K</span></td>
+  <td class="r"><span class="val-lbl">â©142K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ê°ë¦ ì»¨í¼ë¤ì¤ ì¤ì ì¤ìí¸ í¸í</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©34K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©8K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©40K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©487</span></td>
+  <td class="r"><span class="val-lbl">â©35K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ì¼ì±í´ë¦¬ì¡°í¸ ì¤ìë°¸ë¦¬(Kensington Resort </div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©33K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  8.81%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©40K</span></td>
+  <td class="r"><span class="val-lbl">â©73K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©219</span></td>
+  <td class="r"><span class="val-lbl">â©34K</span></td>
+  <td class="r sep"><span class="db pos">â² â©33K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ì¼ì±í´í¸í íì°½(Kensington Hotel Pyeo</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©28K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©15K</span></td>
+  <td class="r"><span class="val-lbl">â©13K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©29K</span></td>
+  <td class="r"><span class="val-lbl">â©57K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©216K</span></td>
+  <td class="r"><span class="val-lbl">â©244K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">13</span></td>
+  <td><div class="pn">ëë¯¸ëí´ë¼ë° ìì´(Dominica Clava Sokch</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©27K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©9K</span></td>
+  <td class="r"><span class="val-lbl">â©19K</span></td>
+  <td class="r sep"><span class="db pos">â² â©27K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">14</span></td>
+  <td><div class="pn">íë¦¬ë°ì´ ì¸ ë¦¬ì¡°í¸ ìíìì íì°½(Holiday Inn</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©27K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.28%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©23K</span></td>
+  <td class="r"><span class="val-lbl">â©50K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©35K</span></td>
+  <td class="r"><span class="val-lbl">â©62K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©34K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">15</span></td>
+  <td><div class="pn">ì¼íë§í¬ í¸í</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©27K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.0%</div></td>
+  <td class="r sep"><span class="db pos">â² â©20K</span></td>
+  <td class="r"><span class="val-lbl">â©7K</span></td>
+  <td class="r sep"><span class="db pos">â² â©14K</span></td>
+  <td class="r"><span class="val-lbl">â©13K</span></td>
+  <td class="r sep"><span class="db pos">â² â©18K</span></td>
+  <td class="r"><span class="val-lbl">â©9K</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-ì ë¼ì¶©ì²­">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©9.1M</div>
+  <div class="gbar"><div class="gbf" style="width:2%"></div></div>
+  <span class="bdg up">â² WoW â©1.2M</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©338K</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ WoW â©226K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm neg">â¼ â©9.6M</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ CM â©345K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">44</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">52</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">1.86%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ì¬ì ë¼ë§ë¤ íë¼ì í¸í</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©2.0M</b></td>
+  <td class="r">12</td><td class="r">13</td>
+  <td class="r">3.02%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©1.4M</span><span class="chgs">+1.398pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©914K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©483K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ë¼íë¼ì¤ ë¦¬ì(ëì°)(Splash Resom (Duks</div><div class="pb"><div class="pbf" style="width:49px"></div></div></td>
+  <td class="r"><b>â©1.5M</b></td>
+  <td class="r">8</td><td class="r">9</td>
+  <td class="r">0.77%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©60K</span><span class="chgs">+0.439pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©8.7M</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©366K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ì¤íë¼ì¤ ë¦¬ì(ëì°)(Splash Resom (Duks</div><div class="pb"><div class="pbf" style="width:33px"></div></div></td>
+  <td class="r"><b>â©1.1M</b></td>
+  <td class="r">3</td><td class="r">5</td>
+  <td class="r">0.00%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©365K</span><span class="chgs">+0.000pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©58K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©390K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ ì¬ì</div><div class="pb"><div class="pbf" style="width:26px"></div></div></td>
+  <td class="r"><b>â©830K</b></td>
+  <td class="r">3</td><td class="r">4</td>
+  <td class="r">0.82%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©11K</span><span class="chgs">-0.595pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©835K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©5.2M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ìì¼ëë ë¦¬ì(ìë©´ë)(Island Resom (Anm</div><div class="pb"><div class="pbf" style="width:25px"></div></div></td>
+  <td class="r"><b>â©792K</b></td>
+  <td class="r">4</td><td class="r">4</td>
+  <td class="r">0.39%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©134K</span><span class="chgs">-0.037pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©151K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©792K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ë¼íí¸í ì ì£¼</div><div class="pb"><div class="pbf" style="width:20px"></div></div></td>
+  <td class="r"><b>â©651K</b></td>
+  <td class="r">3</td><td class="r">4</td>
+  <td class="r">2.29%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©785K</span><span class="chgs">-0.263pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©463K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©357K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ë²¨í¬ë  ë¦¬ì¡°í¸(Belleforet Resort)</div><div class="pb"><div class="pbf" style="width:18px"></div></div></td>
+  <td class="r"><b>â©564K</b></td>
+  <td class="r">1</td><td class="r">2</td>
+  <td class="r">0.00%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©336K</span><span class="chgs">+0.000pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©90K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©766K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ë¼ë§ë¤ ë°ì´ ìë¤ ëì  (Ramada by Wyndha</div><div class="pb"><div class="pbf" style="width:15px"></div></div></td>
+  <td class="r"><b>â©492K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">1.82%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©492K</span><span class="chgs">+1.818pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©154K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©492K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ë² ì¤í¸ ì¨ì¤í´ íë¬ì¤ ì ì£¼ í¸í(Best Western</div><div class="pb"><div class="pbf" style="width:10px"></div></div></td>
+  <td class="r"><b>â©328K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">1.37%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©26K</span><span class="chgs">-0.325pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©102K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©3.0M</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">ì¨ìë¦¬ì¡°í¸</div><div class="pb"><div class="pbf" style="width:9px"></div></div></td>
+  <td class="r"><b>â©298K</b></td>
+  <td class="r">1</td><td class="r">1</td>
+  <td class="r">5.88%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©298K</span><span class="chgs">+5.882pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©30K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©298K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ì í ë§ë¦¬ë í¸í & ë¦¬ì¡°í¸(Utop Marina Ho</div><div class="pb"><div class="pbf" style="width:8px"></div></div></td>
+  <td class="r"><b>â©273K</b></td>
+  <td class="r">2</td><td class="r">3</td>
+  <td class="r">2.25%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©532K</span><span class="chgs">+2.247pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©355K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©907K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ì¬ì íì´ë½ë¦¬ì¡°í¸(Yeosu Highlark Resor</div><div class="pb"><div class="pbf" style="width:5px"></div></div></td>
+  <td class="r"><b>â©158K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">1.08%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©527K</span><span class="chgs">-1.099pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©299K</span></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©120K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ë¼ë§ë¤ íë¼ì ë°ì´ ìë¤ ëì° ì¬ì(Ramada Pla</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©104K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db pos">â² â©75K</span></td>
+  <td class="r"><span class="val-lbl">â©29K</span></td>
+  <td class="r sep"><span class="db pos">â² â©57K</span></td>
+  <td class="r"><span class="val-lbl">â©47K</span></td>
+  <td class="r sep"><span class="db pos">â² â©34K</span></td>
+  <td class="r"><span class="val-lbl">â©70K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ë¼íë¼ì¤ ë¶í°í¬ ë¦¬ì¡°í¸ ì¤ ì¤í(La Terrace B</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©55K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.57%</div></td>
+  <td class="r sep"><span class="db pos">â² â©3K</span></td>
+  <td class="r"><span class="val-lbl">â©53K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©235K</span></td>
+  <td class="r"><span class="val-lbl">â©291K</span></td>
+  <td class="r sep"><span class="db pos">â² â©195</span></td>
+  <td class="r"><span class="val-lbl">â©55K</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ë¼íí¸í ì ì£¼</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©47K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  9.24%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©22K</span></td>
+  <td class="r"><span class="val-lbl">â©69K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©147</span></td>
+  <td class="r"><span class="val-lbl">â©47K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©28K</span></td>
+  <td class="r"><span class="val-lbl">â©75K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ìì¼ëë ë¦¬ì</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©34K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©26K</span></td>
+  <td class="r"><span class="val-lbl">â©8K</span></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©21K</span></td>
+  <td class="r sep"><span class="db pos">â² â©34K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ë²¨í¬ë ë¦¬ì¡°í¸</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©24K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©24K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©29K</span></td>
+  <td class="r sep"><span class="db pos">â² â©3K</span></td>
+  <td class="r"><span class="val-lbl">â©21K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">6</span></td>
+  <td><div class="pn">ì ë¼ì¤íì´ ì¬ì(Silla Stay Yeosu)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©18K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.64%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©37K</span></td>
+  <td class="r"><span class="val-lbl">â©55K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©50K</span></td>
+  <td class="r"><span class="val-lbl">â©68K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©126K</span></td>
+  <td class="r"><span class="val-lbl">â©144K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">7</span></td>
+  <td><div class="pn">ì¨ì ë¦¬ì¡°í¸ ììë(C-ONE Resort Jaeund</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©18K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.91%</div></td>
+  <td class="r sep"><span class="db pos">â² â©18K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©4K</span></td>
+  <td class="r"><span class="val-lbl">â©14K</span></td>
+  <td class="r sep"><span class="db pos">â² â©18K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">8</span></td>
+  <td><div class="pn">ë² ì¤í¸ì¨ì¤í´ íë¬ì¤ ì ì£¼ í¸í(Best Western </div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©13K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  3.93%</div></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db pos">â² â©670</span></td>
+  <td class="r"><span class="val-lbl">â©12K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©87K</span></td>
+  <td class="r"><span class="val-lbl">â©100K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">9</span></td>
+  <td><div class="pn">ì¬ì ì í ë§ë¦¬ë í¸í&ë¦¬ì¡°í¸(Yeosu UTop Ma</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©12K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©19K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©4K</span></td>
+  <td class="r"><span class="val-lbl">â©16K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©11K</span></td>
+  <td class="r"><span class="val-lbl">â©23K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">10</span></td>
+  <td><div class="pn">í¸í ì ë ë¥´(Hotel Solaire)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©5K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db pos">â² â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©5K</span></td>
+  <td class="r"><span class="val-lbl">â©9K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©12K</span></td>
+  <td class="r"><span class="val-lbl">â©17K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">11</span></td>
+  <td><div class="pn">ì¤íë¼ì¤ ë¦¬ì(Splas Resom)</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©5K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.27%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©19K</span></td>
+  <td class="r"><span class="val-lbl">â©24K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©14K</span></td>
+  <td class="r"><span class="val-lbl">â©19K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©4K</span></td>
+  <td class="r"><span class="val-lbl">â©8K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">12</span></td>
+  <td><div class="pn">ì¬ì íì´ë½ë¦¬ì¡°í¸(Yeosu Highlark Resor</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©4K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.19%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©20K</span></td>
+  <td class="r"><span class="val-lbl">â©24K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©14K</span></td>
+  <td class="r"><span class="val-lbl">â©19K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©10K</span></td>
+  <td class="r"><span class="val-lbl">â©15K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">13</span></td>
+  <td><div class="pn">ë¼ë§ë¤ ë°ì´ ìë¤ ëì  (Ramada by Wyndha</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©7K</span></td>
+  <td class="r"><span class="val-lbl">â©7K</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">14</span></td>
+  <td><div class="pn">ì¬ì íë ë² ì´</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©232K</span></td>
+  <td class="r"><span class="val-lbl">â©232K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©87K</span></td>
+  <td class="r"><span class="val-lbl">â©87K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©64K</span></td>
+  <td class="r"><span class="val-lbl">â©64K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">15</span></td>
+  <td><div class="pn">í¸íì´ë¼ì´ë¸ íì í¼ íì¥ë¹ì¹ë¦¬ì¡°í¸(Hotelarriv</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©25K</span></td>
+  <td class="r"><span class="val-lbl">â©25K</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-ìì¸ í¤ì´ì¹´ì´í¸">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©11.1M</div>
+  <div class="gbar"><div class="gbf" style="width:2%"></div></div>
+  <span class="bdg down">â¼ WoW â©80K</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©106K</div>
+  <div style="margin-top:5px"><span class="bdg down">â¼ WoW â©129K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm pos">â² â©10.2M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² CM â©81K</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">17</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">19</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">0.78%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ìí </div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©7.3M</b></td>
+  <td class="r">13</td><td class="r">13</td>
+  <td class="r">0.38%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©481K</span><span class="chgs">-0.160pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©246K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©6.7M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ë¹ì¤í ìì»¤í ìì¸(Vista Walkerhill Se</div><div class="pb"><div class="pbf" style="width:25px"></div></div></td>
+  <td class="r"><b>â©2.8M</b></td>
+  <td class="r">2</td><td class="r">4</td>
+  <td class="r">0.72%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©450K</span><span class="chgs">-0.644pp</span></div></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©759K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©2.8M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ê·¸ëë ìì»¤í ìì¸(Grand Walkerhill Se</div><div class="pb"><div class="pbf" style="width:5px"></div></div></td>
+  <td class="r"><b>â©629K</b></td>
+  <td class="r">1</td><td class="r">1</td>
+  <td class="r">0.63%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©629K</span><span class="chgs">+0.633pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©464K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©266K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ìì»¤í ëê¸ë¼ì¤ íì°ì¤(Walkerhill Dougla</div><div class="pb"><div class="pbf" style="width:3px"></div></div></td>
+  <td class="r"><b>â©370K</b></td>
+  <td class="r">1</td><td class="r">1</td>
+  <td class="r">1.41%</td>
+  <td class="r"><div class="chg"><span class="chgm neg">â¼ â©678K</span><span class="chgs">+0.775pp</span></div></td>
+  <td class="r"><span class="neg" style="font-size:11px;font-weight:700">â¼ â©132K</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©370K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">íë¼ì¤íë¼ ìì¸</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©86K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  5.98%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©56K</span></td>
+  <td class="r"><span class="val-lbl">â©142K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©94K</span></td>
+  <td class="r"><span class="val-lbl">â©181K</span></td>
+  <td class="r sep"><span class="db pos">â² â©86K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ë¹ì¤í ìì»¤í ìì¸</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©20K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  4.28%</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©20K</span></td>
+  <td class="r"><span class="val-lbl">â©39K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©8K</span></td>
+  <td class="r"><span class="val-lbl">â©28K</span></td>
+  <td class="r sep"><span class="db pos">â² â©20K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">3</span></td>
+  <td><div class="pn">ê·¸ëë ìì»¤í ìì¸</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©55K</span></td>
+  <td class="r"><span class="val-lbl">â©55K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©26K</span></td>
+  <td class="r"><span class="val-lbl">â©26K</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">4</span></td>
+  <td><div class="pn">ìì»¤í ëê¸ë¼ì¤ íì°ì¤(Walkerhill Dougla</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db neg">â¼ â©54K</span></td>
+  <td class="r"><span class="val-lbl">â©54K</span></td>
+  <td class="r sep"><span class="db neg">â¼ â©32K</span></td>
+  <td class="r"><span class="val-lbl">â©32K</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk ">5</span></td>
+  <td><div class="pn">ìí¼í ì°ë°°ìë ìì¸ í¸í&ìë¹ì¤ë ë ì§ëì¤(Sofit</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©0</div></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="panel" id="panel-íì">
+<div class="kpi-row">
+<div class="kpi">
+  <div class="kl">ì£¼ê° GMV</div><div class="kv">â©33.8M</div>
+  <div class="gbar"><div class="gbf" style="width:8%"></div></div>
+  <span class="bdg up">â² WoW â©33.8M</span>
+</div>
+<div class="kpi">
+  <div class="kl">ê³µíì´ìµ í©ê³</div><div class="kv sm">â©1.7M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² WoW â©1.7M</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">YoY GMV</div><div class="kv sm pos">â² â©33.8M</div>
+  <div style="margin-top:5px"><span class="bdg up">â² CM â©1.7M</span></div>
+</div>
+<div class="kpi">
+  <div class="kl">ì´ ìì½</div><div class="kv">97</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ë£¸ëì <b style="color:#0d1b6e">103</b></div>
+</div>
+<div class="kpi">
+  <div class="kl">íê·  CVR</div><div class="kv">2.36%</div>
+  <div style="font-size:11px;color:#8892aa;margin-top:4px">ìì¸í â ê²°ì ìë£</div>
+</div>
+</div>
+<div class="st">ð¦ GMV ìì</div>
+<div class="tw"><table><thead><tr><th>#</th><th>ìíëª</th><th class="r">GMV</th><th class="r">ìì½</th><th class="r">ë£¸ëì</th><th class="r">CVR</th><th class="r">WoW GMV</th><th class="r">4ì£¼ íê·  ëë¹</th><th class="r">YoY GMV</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">í¹ë¤í¤ì¦íë¹ë¼ë¦¬ì¡°í¸ã</div><div class="pb"><div class="pbf" style="width:65px"></div></div></td>
+  <td class="r"><b>â©33.5M</b></td>
+  <td class="r">95</td><td class="r">101</td>
+  <td class="r">4.72%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©33.5M</span><span class="chgs">+4.717pp</span></div></td>
+  <td class="r"><span class="flat" style="font-size:11px;font-weight:700">â â©0</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©33.5M</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ì¤íì¸ë§ì ë¼ì¤ë¸ëì¹´ì¤(Spain village Las</div><div class="pb"><div class="pbf" style="width:0px"></div></div></td>
+  <td class="r"><b>â©280K</b></td>
+  <td class="r">2</td><td class="r">2</td>
+  <td class="r">0.00%</td>
+  <td class="r"><div class="chg"><span class="chgm pos">â² â©280K</span><span class="chgs">+0.000pp</span></div></td>
+  <td class="r"><span class="flat" style="font-size:11px;font-weight:700">â â©0</span></td>
+  <td class="r"><span class="pos" style="font-size:11px;font-weight:700">â² â©280K</span></td>
+</tr>
+</tbody></table></div>
+<div class="st">ð° ê³µíì´ìµ ë¶ì</div>
+<div class="tw"><table><thead>
+<tr><th rowspan="2">#</th><th rowspan="2">ìíëª</th><th rowspan="2" class="r">ì´ë²ì£¼<br>ê³µíì´ìµ</th><th colspan="2" class="grp grp-first">WoW (ì ì£¼ ëë¹)</th><th colspan="2" class="grp grp-first">4ì£¼ íê·  ëë¹</th><th colspan="2" class="grp grp-first">YoY (ì ë ëê¸°)</th></tr>
+<tr><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ì ì£¼ê°</th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">4ì£¼íê· </th><th class="r sub sub-first">ì°¨ì´</th><th class="r sub">ìëê°</th></tr></thead><tbody>
+<tr>
+  <td><span class="rk top">1</span></td>
+  <td><div class="pn">ê°í í¹ë¤í¤ì¦íë¹ë¼ë¦¬ì¡°í¸íì(Gapyeong Kingd</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©1.7M</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  8.06%</div></td>
+  <td class="r sep"><span class="db pos">â² â©1.7M</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©1.7M</span></td>
+  <td class="r sep"><span class="db pos">â² â©1.7M</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+<tr>
+  <td><span class="rk top">2</span></td>
+  <td><div class="pn">ê°í ë¼ì¤ë¸ëì¹´ì¤íì(Gapyeong Las Blanc</div></td>
+  <td class="r"><div style="font-size:13px;font-weight:700;color:#0d1b6e">â©13K</div><div class="val-lbl" style="margin-top:2px">ì´ìµë¥  7.03%</div></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+  <td class="r sep"><span class="db flat">â â©0</span></td>
+  <td class="r"><span class="val-lbl">â©13K</span></td>
+  <td class="r sep"><span class="db pos">â² â©13K</span></td>
+  <td class="r"><span class="val-lbl">â©0</span></td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+<div style="text-align:center;padding:12px;font-size:11px;color:#8892aa;border-top:1px solid #dde2ef;margin-top:4px">
+  êµ­ë´ìë°ì¬ìì¤ ìì ëª¨ëí°ë§ Â· ê¸°ì¤: 2026.03.23 Â· MyRealTrip
+</div>
+<script>
+function showTab(k){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+k).classList.add('active');
+  document.getElementById('panel-'+k).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body></html>
